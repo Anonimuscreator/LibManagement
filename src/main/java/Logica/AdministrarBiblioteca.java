@@ -1,6 +1,8 @@
 // Clase AdministrarBiblioteca
 package Logica;
 
+import db.BaseDatosBiblioteca;
+
 public class AdministrarBiblioteca {
     public static void main(String[] args) {
         // Crear instancias de la biblioteca, estudiantes y libros
