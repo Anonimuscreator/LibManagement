@@ -28,4 +28,9 @@ public class Libro {
     public void devolver() {
         disponible = true;
     }
+
+    // Nuevo método para obtener el ID del libro
+    public int getIdLibro() {
+        return id;
+    }
 }

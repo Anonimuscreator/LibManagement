@@ -1,12 +1,8 @@
 package Logica;
 
 import db.BaseDatosBiblioteca;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
-class Biblioteca {
+public class Biblioteca {
     private BaseDatosBiblioteca conexionBaseDatos;
 
     public Biblioteca() {
@@ -17,17 +13,8 @@ class Biblioteca {
         if (libro != null && libro.estaDisponible()) {
             estudiante.prestar(libro);
 
-            // Agregar lógica para registrar el préstamo en la base de datos
-            Connection conexion = conexionBaseDatos.obtenerConexion();
-            try {
-                String query = "INSERT INTO prestamos (id_estudiante, id_libro) VALUES (?, ?)";
-                PreparedStatement preparedStatement = conexion.prepareStatement(query);
-                preparedStatement.setInt(1, estudiante.getId());
-                preparedStatement.setInt(2, libro.getId());
-                preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            // Delegar la transacción a la clase BaseDatosBiblioteca
+            conexionBaseDatos.registrarPrestamo(estudiante.getId(), libro.getId());
         } else {
             System.out.println("El libro no está disponible o no existe.");
         }
@@ -36,16 +23,7 @@ class Biblioteca {
     public void realizarDevolucion(Estudiante estudiante, Libro libro) {
         estudiante.devolver(libro);
 
-        // Agregar lógica para registrar la devolución en la base de datos
-        Connection conexion = conexionBaseDatos.obtenerConexion();
-        try {
-            String query = "DELETE FROM prestamos WHERE id_estudiante = ? AND id_libro = ?";
-            PreparedStatement preparedStatement = conexion.prepareStatement(query);
-            preparedStatement.setInt(1, estudiante.getId());
-            preparedStatement.setInt(2, libro.getId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        // Delegar la transacción a la clase BaseDatosBiblioteca
+        conexionBaseDatos.registrarDevolucion(estudiante.getId(), libro.getId());
     }
 }
