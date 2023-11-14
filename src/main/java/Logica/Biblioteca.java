@@ -1,3 +1,4 @@
+// Clase Biblioteca
 package Logica;
 
 import db.BaseDatosBiblioteca;
@@ -14,7 +15,7 @@ public class Biblioteca {
             estudiante.prestar(libro);
 
             // Delegar la transacción a la clase BaseDatosBiblioteca
-            conexionBaseDatos.registrarPrestamo(estudiante.getId(), libro.getId());
+            conexionBaseDatos.registrarPrestamo(estudiante, libro);
         } else {
             System.out.println("El libro no está disponible o no existe.");
         }
@@ -24,6 +25,6 @@ public class Biblioteca {
         estudiante.devolver(libro);
 
         // Delegar la transacción a la clase BaseDatosBiblioteca
-        conexionBaseDatos.registrarDevolucion(estudiante.getId(), libro.getId());
+        conexionBaseDatos.registrarDevolucion(estudiante, libro);
     }
 }

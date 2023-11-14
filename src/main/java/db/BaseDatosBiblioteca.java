@@ -1,9 +1,13 @@
+// Clase BaseDatosBiblioteca
 package db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import Logica.Estudiante;
+import Logica.Libro;
 
 public class BaseDatosBiblioteca {
     private static BaseDatosBiblioteca instancia = null;
@@ -30,13 +34,13 @@ public class BaseDatosBiblioteca {
         return conexion;
     }
 
-    // Nuevos métodos para gestionar transacciones
-    public void registrarPrestamo(int idEstudiante, int idLibro) {
+    // Método para registrar préstamo
+    public void registrarPrestamo(Estudiante estudiante, Libro libro) {
         try (Connection conexion = obtenerConexion()) {
             String query = "INSERT INTO prestamos (id_estudiante, id_libro) VALUES (?, ?)";
             try (PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
-                preparedStatement.setInt(1, idEstudiante);
-                preparedStatement.setInt(2, idLibro);
+                preparedStatement.setInt(1, estudiante.getId());
+                preparedStatement.setInt(2, libro.getIdLibro());
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -45,12 +49,13 @@ public class BaseDatosBiblioteca {
         }
     }
 
-    public void registrarDevolucion(int idEstudiante, int idLibro) {
+    // Método para registrar devolución
+    public void registrarDevolucion(Estudiante estudiante, Libro libro) {
         try (Connection conexion = obtenerConexion()) {
             String query = "DELETE FROM prestamos WHERE id_estudiante = ? AND id_libro = ?";
             try (PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
-                preparedStatement.setInt(1, idEstudiante);
-                preparedStatement.setInt(2, idLibro);
+                preparedStatement.setInt(1, estudiante.getId());
+                preparedStatement.setInt(2, libro.getIdLibro());
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {

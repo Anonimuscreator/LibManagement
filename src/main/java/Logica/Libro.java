@@ -1,3 +1,4 @@
+// Clase Libro
 package Logica;
 
 public class Libro {
@@ -29,8 +30,11 @@ public class Libro {
         disponible = true;
     }
 
-    // Nuevo método para obtener el ID del libro
     public int getIdLibro() {
         return id;
+    }
+
+    public String getTitulo() {
+        return titulo;
     }
 }
