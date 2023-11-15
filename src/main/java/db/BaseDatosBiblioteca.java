@@ -18,9 +18,12 @@ public class BaseDatosBiblioteca {
 
     private BaseDatosBiblioteca() {
         try {
-            // Establece la conexión a tu base de datos aquí
-            conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/biblioteca", "Admin", "Admin03");
-        } catch (SQLException e) {
+            // Cargar el driver JDBC de SQLite
+            Class.forName("org.sqlite.JDBC");
+            
+            // Establecer la conexión a tu base de datos SQLite aquí (cambiar la URL según tu caso)
+            conexion = DriverManager.getConnection("jdbc:sqlite:/ruta/a/tu/bd/biblioteca.db");
+        } catch (ClassNotFoundException | SQLException e) {
             // Manejar la excepción o relanzarla según sea necesario
             e.printStackTrace();
         }
