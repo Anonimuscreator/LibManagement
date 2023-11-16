@@ -27,6 +27,7 @@ public class BaseDatosBiblioteca {
             e.printStackTrace();
         }
     }
+    
 
     public static BaseDatosBiblioteca obtenerInstancia() {
         if (instancia == null) {
@@ -116,5 +117,19 @@ public class BaseDatosBiblioteca {
         }
 
         return librosPrestados;
+    }
+    
+        public boolean isConnected() {
+        return conexion != null;
+    }
+        
+        public void cerrarConexion() {
+        if (conexion != null) {
+            try {
+                conexion.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

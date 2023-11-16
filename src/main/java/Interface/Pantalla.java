@@ -1,14 +1,15 @@
 package Interface;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import db.BaseDatosBiblioteca;
+
 public class Pantalla extends javax.swing.JFrame {
+    
+    private BaseDatosBiblioteca baseDatos;
 
     public Pantalla() {
         initComponents();
@@ -28,6 +29,7 @@ public class Pantalla extends javax.swing.JFrame {
         btnReserve = new javax.swing.JButton();
         status = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        btnCloseDB = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -100,7 +102,9 @@ public class Pantalla extends javax.swing.JFrame {
 
         status.setText("Estado:");
 
-        jLabel4.setText("Conectar a base de datos");
+        jLabel4.setText("Administrar base de datos");
+
+        btnCloseDB.setText("Cerrar");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -116,10 +120,13 @@ public class Pantalla extends javax.swing.JFrame {
                         .addComponent(btnReserve, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(41, 41, 41)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnConnect))))
-                .addContainerGap(98, Short.MAX_VALUE))
+                        .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(btnConnect)
+                        .addGap(33, 33, 33)
+                        .addComponent(btnCloseDB)))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -127,7 +134,9 @@ public class Pantalla extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
-                .addComponent(btnConnect)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnConnect)
+                    .addComponent(btnCloseDB))
                 .addGap(45, 45, 45)
                 .addComponent(status)
                 .addGap(27, 27, 27)
@@ -159,6 +168,26 @@ public class Pantalla extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void openDatabase() {
+        baseDatos = BaseDatosBiblioteca.obtenerInstancia();
+        if (baseDatos.isConnected()) {
+            // Update status label
+            status.setText("Conectado");
+        } else {
+            // Update status label
+            status.setText("Error de conexión");
+        }
+    }
+
+    private void closeDatabase() {
+        baseDatos = BaseDatosBiblioteca.obtenerInstancia();
+        baseDatos.cerrarConexion();
+        // Update status label
+        status.setText("Desconectado");
+    }
+    
+    
+    
     private void studentNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_studentNameActionPerformed
@@ -168,33 +197,23 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_sortNameActionPerformed
 
     private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
-        Connection conexion = null;
-        try {
-            // Establece la conexión a tu base de datos aquí
-            String url = "jdbc:mysql://localhost:3306/biblioteca";
-            String usuario = "tuUsuario";
-            String contraseña = "tuContraseña";
-            conexion = DriverManager.getConnection(url, usuario, contraseña);
-
-            // Si la conexión es exitosa, muestra un mensaje
-            JOptionPane.showMessageDialog(this, "Conexión exitosa a la base de datos", "Estado de conexión", JOptionPane.INFORMATION_MESSAGE);
-        } catch (SQLException e) {
-            // Si hay un error, muestra un mensaje de error
-            JOptionPane.showMessageDialog(this, "Error al conectar a la base de datos: " + e.getMessage(), "Error de conexión", JOptionPane.ERROR_MESSAGE);
-        } finally {
-            // Cierra la conexión
-            if (conexion != null) {
-                try {
-                    conexion.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+          openDatabase();
     }//GEN-LAST:event_btnConnectActionPerformed
 
+    private void btnCloseDBActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        closeDatabase();
+    }
 
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Pantalla().setVisible(true);
+            }
+        });
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCloseDB;
     private javax.swing.JButton btnConnect;
     private javax.swing.JButton btnReserve;
     private javax.swing.JLabel jLabel1;
