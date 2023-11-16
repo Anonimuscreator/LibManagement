@@ -25,7 +25,10 @@ public class Pantalla extends javax.swing.JFrame {
         btnCloseDB = new javax.swing.JButton();
         status = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnLoan = new javax.swing.JButton();
+        entryStudent = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        entryBook = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -44,10 +47,21 @@ public class Pantalla extends javax.swing.JFrame {
 
         jLabel4.setText("Administrar base de datos");
 
-        jButton1.setText("Prestamo");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnLoan.setText("Prestamo");
+        btnLoan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnLoanActionPerformed(evt);
+            }
+        });
+
+        entryStudent.setText("Id de Alumno");
+
+        jLabel1.setText("Realizar Prestamo:");
+
+        entryBook.setText("Id de Libro");
+        entryBook.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                entryBookActionPerformed(evt);
             }
         });
 
@@ -56,43 +70,54 @@ public class Pantalla extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(13, 13, 13)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnConnect)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnCloseDB))
-                            .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(71, 71, 71))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel4)
-                        .addGap(96, 96, 96))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(btnLoan, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnReserve, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(58, 58, 58))
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(136, 136, 136)
+                        .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(btnConnect)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCloseDB))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(18, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(entryStudent, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                    .addComponent(entryBook))
+                .addGap(509, 509, 509))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel4)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(status))
                 .addGap(6, 6, 6)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnConnect)
                     .addComponent(btnCloseDB))
-                .addGap(52, 52, 52)
-                .addComponent(status)
-                .addGap(78, 78, 78)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61)
+                .addComponent(entryStudent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addComponent(entryBook, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(49, 49, 49)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnReserve)
-                    .addComponent(jButton1))
-                .addContainerGap(150, Short.MAX_VALUE))
+                    .addComponent(btnLoan))
+                .addGap(35, 35, 35))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -143,9 +168,47 @@ public class Pantalla extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnConnectActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnLoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoanActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnLoanActionPerformed
+    // Get the student and book IDs from the text fields
+    int studentId = Integer.parseInt(entryStudent.getText());
+    int bookId = Integer.parseInt(entryBook.getText());
+
+    // Ensure that the database is connected
+    openDatabase();
+    if (baseDatos.isConnected()) {
+        // Get the current date
+        LocalDate currentDate = LocalDate.now();
+
+        try {
+            // SQL statement to insert data into prestamo table
+            String sql = "INSERT INTO prestamo (idAlumno, idLibro, fechaPrestamo) VALUES (?, ?, ?)";
+            
+            // Create a PreparedStatement
+            PreparedStatement preparedStatement = baseDatos.obtenerConexion().prepareStatement(sql);
+            
+            // Set values for placeholders in the SQL statement
+            preparedStatement.setInt(1, studentId);
+            preparedStatement.setInt(2, bookId);
+            preparedStatement.setString(3, currentDate.toString());
+            
+            // Execute the SQL statement
+            preparedStatement.executeUpdate();
+
+            // Optionally, show a message dialog to indicate successful loan
+            JOptionPane.showMessageDialog(this, "Préstamo realizado con éxito", "Estado de conexión", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException e) {
+            // Handle any SQL exceptions
+            e.printStackTrace();
+            
+            // Optionally, show a message dialog for error
+            JOptionPane.showMessageDialog(this, "Error al realizar el préstamo", "Error de conexión", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    private void entryBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entryBookActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_entryBookActionPerformed
 
     private void openDatabase() {
         baseDatos = BaseDatosBiblioteca.obtenerInstancia();
@@ -200,8 +263,11 @@ private void btnCloseDBActionPerformed(java.awt.event.ActionEvent evt) {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCloseDB;
     private javax.swing.JButton btnConnect;
+    private javax.swing.JButton btnLoan;
     private javax.swing.JButton btnReserve;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JTextField entryBook;
+    private javax.swing.JTextField entryStudent;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel status;
