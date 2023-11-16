@@ -169,43 +169,9 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConnectActionPerformed
 
     private void btnLoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoanActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_btnLoanActionPerformed
-    // Get the student and book IDs from the text fields
-    int studentId = Integer.parseInt(entryStudent.getText());
-    int bookId = Integer.parseInt(entryBook.getText());
 
-    // Ensure that the database is connected
-    openDatabase();
-    if (baseDatos.isConnected()) {
-        // Get the current date
-        LocalDate currentDate = LocalDate.now();
-
-        try {
-            // SQL statement to insert data into prestamo table
-            String sql = "INSERT INTO prestamo (idAlumno, idLibro, fechaPrestamo) VALUES (?, ?, ?)";
-            
-            // Create a PreparedStatement
-            PreparedStatement preparedStatement = baseDatos.obtenerConexion().prepareStatement(sql);
-            
-            // Set values for placeholders in the SQL statement
-            preparedStatement.setInt(1, studentId);
-            preparedStatement.setInt(2, bookId);
-            preparedStatement.setString(3, currentDate.toString());
-            
-            // Execute the SQL statement
-            preparedStatement.executeUpdate();
-
-            // Optionally, show a message dialog to indicate successful loan
-            JOptionPane.showMessageDialog(this, "Préstamo realizado con éxito", "Estado de conexión", JOptionPane.INFORMATION_MESSAGE);
-        } catch (SQLException e) {
-            // Handle any SQL exceptions
-            e.printStackTrace();
-            
-            // Optionally, show a message dialog for error
-            JOptionPane.showMessageDialog(this, "Error al realizar el préstamo", "Error de conexión", JOptionPane.ERROR_MESSAGE);
-        }
-    }
     private void entryBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entryBookActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_entryBookActionPerformed
