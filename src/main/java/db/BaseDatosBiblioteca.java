@@ -124,15 +124,18 @@ public class BaseDatosBiblioteca {
         return conexion != null;
     }
         
-        public void cerrarConexion() {
-        if (conexion != null) {
-            try {
-                conexion.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+        public boolean cerrarConexion() {
+            if (conexion != null) {
+                try {
+                    conexion.close();
+                    return true;  // Return true if the connection was successfully closed
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
+            return false;  // Return false if there was an issue or if the connection was already closed
         }
-    }
+
      public ResultSet executeQuery(String query) throws SQLException {
         if (conexion != null && !conexion.isClosed()) {
             Statement statement = conexion.createStatement();
