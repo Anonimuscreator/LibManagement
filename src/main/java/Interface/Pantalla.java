@@ -1,11 +1,11 @@
 package Interface;
 
-import javax.swing.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import db.BaseDatosBiblioteca;
+import java.sql.Connection;
 
 public class Pantalla extends javax.swing.JFrame {
     
@@ -185,9 +185,6 @@ public class Pantalla extends javax.swing.JFrame {
         // Update status label
         status.setText("Desconectado");
     }
-    
-    
-    
     private void studentNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_studentNameActionPerformed
@@ -197,7 +194,30 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_sortNameActionPerformed
 
     private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
-          openDatabase();
+    openDatabase(); // Ensure that the database is connected
+
+    if (baseDatos.isConnected()) {
+        try {
+            // Assuming you have a Statement instance, you can execute a query
+            String query = "SELECT * FROM estudiantes";
+            ResultSet resultSet = baseDatos.executeQuery(query);
+
+            // Process the ResultSet (assuming a simple output to the console)
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String nombre = resultSet.getString("nombre");
+
+                // You can do something with the data (for example, print it)
+                System.out.println("ID: " + id + ", Nombre: " + nombre);
+            }
+
+            // ResultSet is closed automatically when the statement is closed
+
+        } catch (SQLException e) {
+            // Handle any SQL exceptions
+            e.printStackTrace();
+        }
+    }
     }//GEN-LAST:event_btnConnectActionPerformed
 
     private void btnCloseDBActionPerformed(java.awt.event.ActionEvent evt) {                                           

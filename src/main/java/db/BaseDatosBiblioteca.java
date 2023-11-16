@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Statement;
 
 import Logica.Estudiante;
 import Logica.Libro;
@@ -130,6 +131,14 @@ public class BaseDatosBiblioteca {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+    }
+     public ResultSet executeQuery(String query) throws SQLException {
+        if (conexion != null && !conexion.isClosed()) {
+            Statement statement = conexion.createStatement();
+            return statement.executeQuery(query);
+        } else {
+            throw new SQLException("Connection is closed");
         }
     }
 }
