@@ -1,4 +1,3 @@
-// Clase BaseDatosBiblioteca
 package db;
 
 import java.sql.Connection;
@@ -20,9 +19,9 @@ public class BaseDatosBiblioteca {
         try {
             // Cargar el driver JDBC de SQLite
             Class.forName("org.sqlite.JDBC");
-            
+
             // Establecer la conexión a tu base de datos SQLite aquí (cambiar la URL según tu caso)
-            conexion = DriverManager.getConnection("jdbc:sqlite:/ruta/a/tu/bd/biblioteca.db");
+            conexion = DriverManager.getConnection("jdbc:sqlite:C:/Users/Deplm-08/Desktop/LibManagement/biblioteca.db");
         } catch (ClassNotFoundException | SQLException e) {
             // Manejar la excepción o relanzarla según sea necesario
             e.printStackTrace();
@@ -69,7 +68,33 @@ public class BaseDatosBiblioteca {
             e.printStackTrace();
         }
     }
-    
+
+    // Método para obtener información de un libro
+    public Libro getInformacionLibro(int libroId) {
+        Libro libroInfo = null;
+
+        try (Connection conexion = obtenerConexion()) {
+            String query = "SELECT * FROM Libro WHERE id = ?";
+            try (PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
+                preparedStatement.setInt(1, libroId);
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        int idLibro = resultSet.getInt("id");
+                        String titulo = resultSet.getString("titulo");
+                        boolean disponible = resultSet.getBoolean("disponible");
+
+                        libroInfo = new Libro(idLibro, titulo, disponible);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return libroInfo;
+    }
+
     public List<Libro> getLibrosPrestados(Estudiante estudiante) {
         List<Libro> librosPrestados = new ArrayList<>();
 
@@ -81,7 +106,8 @@ public class BaseDatosBiblioteca {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     while (resultSet.next()) {
                         int idLibro = resultSet.getInt("id_libro");
-                        librosPrestados.add(new Libro(idLibro, null)); // Puedes mejorar esto según tu estructura real
+                        Libro libroInfo = getInformacionLibro(idLibro);
+                        librosPrestados.add(new Libro(libroInfo.getIdLibro(), libroInfo.getTitulo(), libroInfo.estaDisponible()));
                     }
                 }
             }
