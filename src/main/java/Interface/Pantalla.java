@@ -1,11 +1,10 @@
 package Interface;
 
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import db.BaseDatosBiblioteca;
-import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -29,6 +28,8 @@ public class Pantalla extends javax.swing.JFrame {
         entryStudent = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         entryBook = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -54,16 +55,23 @@ public class Pantalla extends javax.swing.JFrame {
             }
         });
 
-        entryStudent.setText("Id de Alumno");
+        entryStudent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                entryStudentActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Realizar Prestamo:");
 
-        entryBook.setText("Id de Libro");
         entryBook.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 entryBookActionPerformed(evt);
             }
         });
+
+        jLabel2.setText("Ingresar ID de alumno:");
+
+        jLabel3.setText("Ingresar ID del Libro:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -78,6 +86,7 @@ public class Pantalla extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(136, 136, 136)
@@ -91,9 +100,11 @@ public class Pantalla extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(18, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(entryStudent, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                    .addComponent(entryBook))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(entryStudent, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                        .addComponent(entryBook)))
                 .addGap(509, 509, 509))
         );
         jPanel1Layout.setVerticalGroup(
@@ -109,9 +120,13 @@ public class Pantalla extends javax.swing.JFrame {
                     .addComponent(btnCloseDB))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(61, 61, 61)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(entryStudent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addGap(17, 17, 17)
                 .addComponent(entryBook, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(49, 49, 49)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -169,12 +184,41 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConnectActionPerformed
 
     private void btnLoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoanActionPerformed
+    // Get the student and book IDs from the text fields
+    try {
+        int studentId = Integer.parseInt(entryStudent.getText());
+        int bookId = Integer.parseInt(entryBook.getText());
 
+        // Open the database connection
+        openDatabase();
+
+        // Check if the database is connected
+        if (baseDatos != null && baseDatos.isConnected()) {
+            // Get the current date
+            String currentDate = baseDatos.getCurrentDate();
+
+            // Register the loan with the current date
+            baseDatos.registrarPrestamo(studentId, bookId, currentDate);
+
+            // Optionally, show a success message
+            JOptionPane.showMessageDialog(this, "Préstamo registrado exitosamente", "Estado de préstamo", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            // Show an error message if the database is not connected
+            JOptionPane.showMessageDialog(this, "Error de conexión a la base de datos", "Error de conexión", JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (NumberFormatException e) {
+        // Handle the case where the input is not a valid number
+        JOptionPane.showMessageDialog(this, "Ingrese valores numéricos válidos para el estudiante y el libro", "Error de entrada", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btnLoanActionPerformed
 
     private void entryBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entryBookActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_entryBookActionPerformed
+
+    private void entryStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entryStudentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_entryStudentActionPerformed
 
     private void openDatabase() {
         baseDatos = BaseDatosBiblioteca.obtenerInstancia();
@@ -187,36 +231,36 @@ public class Pantalla extends javax.swing.JFrame {
         }
     }
 
-private boolean closeDatabase() {
-    baseDatos = BaseDatosBiblioteca.obtenerInstancia();
-    boolean success = baseDatos.cerrarConexion();
-    if (success) {
-        // Update status label
-        status.setText("Desconectado");
-        // Optionally, show a message dialog to indicate successful database closure
-        JOptionPane.showMessageDialog(this, "Base de datos cerrada exitosamente", "Estado de conexión", JOptionPane.INFORMATION_MESSAGE);
-    } else {
-        // Optionally, show a message dialog to indicate closure error
-        JOptionPane.showMessageDialog(this, "Error al cerrar la base de datos", "Error de conexión", JOptionPane.ERROR_MESSAGE);
+    private boolean closeDatabase() {
+       baseDatos = BaseDatosBiblioteca.obtenerInstancia();
+       boolean success = baseDatos.cerrarConexion();
+       if (success) {
+           // Update status label
+           status.setText("Desconectado");
+           // Optionally, show a message dialog to indicate successful database closure
+           JOptionPane.showMessageDialog(this, "Base de datos cerrada exitosamente", "Estado de conexión", JOptionPane.INFORMATION_MESSAGE);
+       } else {
+           // Optionally, show a message dialog to indicate closure error
+           JOptionPane.showMessageDialog(this, "Error al cerrar la base de datos", "Error de conexión", JOptionPane.ERROR_MESSAGE);
+       }
+       return success;
+   }
+
+    private void btnCloseDBActionPerformed(java.awt.event.ActionEvent evt) {
+        SwingUtilities.invokeLater(() -> {
+            boolean isClosed = closeDatabase();
+
+            if (isClosed) {
+                // Update status label
+                status.setText("Desconectado");
+                // Optionally, show a message dialog to indicate that the database was closed successfully
+                JOptionPane.showMessageDialog(this, "Base de datos cerrada exitosamente", "Estado de conexión", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                // Optionally, show a message dialog to indicate that there was an issue closing the database
+                JOptionPane.showMessageDialog(this, "Error al cerrar la base de datos", "Error de conexión", JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
-    return success;
-}
-
-private void btnCloseDBActionPerformed(java.awt.event.ActionEvent evt) {
-    SwingUtilities.invokeLater(() -> {
-        boolean isClosed = closeDatabase();
-
-        if (isClosed) {
-            // Update status label
-            status.setText("Desconectado");
-            // Optionally, show a message dialog to indicate that the database was closed successfully
-            JOptionPane.showMessageDialog(this, "Base de datos cerrada exitosamente", "Estado de conexión", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            // Optionally, show a message dialog to indicate that there was an issue closing the database
-            JOptionPane.showMessageDialog(this, "Error al cerrar la base de datos", "Error de conexión", JOptionPane.ERROR_MESSAGE);
-        }
-    });
-}
 
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -234,6 +278,8 @@ private void btnCloseDBActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JTextField entryBook;
     private javax.swing.JTextField entryStudent;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel status;

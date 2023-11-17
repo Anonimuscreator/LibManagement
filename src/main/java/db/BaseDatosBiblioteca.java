@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import Logica.Estudiante;
 import Logica.Libro;
@@ -101,13 +103,13 @@ public class BaseDatosBiblioteca {
         List<Libro> librosPrestados = new ArrayList<>();
 
         try (Connection conexion = obtenerConexion()) {
-            String query = "SELECT id_libro FROM prestamos WHERE id_estudiante = ?";
+            String query = "SELECT idLibro FROM prestamos WHERE idEstudiante = ?";
             try (PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
                 preparedStatement.setInt(1, estudiante.getId());
 
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     while (resultSet.next()) {
-                        int idLibro = resultSet.getInt("id_libro");
+                        int idLibro = resultSet.getInt("idLibro");
                         Libro libroInfo = getInformacionLibro(idLibro);
                         librosPrestados.add(new Libro(libroInfo.getIdLibro(), libroInfo.getTitulo(), libroInfo.estaDisponible()));
                     }
@@ -142,6 +144,27 @@ public class BaseDatosBiblioteca {
             return statement.executeQuery(query);
         } else {
             throw new SQLException("Connection is closed");
+        }
+    }
+     public String getCurrentDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date currentDate = new Date();
+        return dateFormat.format(currentDate);
+    }
+
+    // Método para registrar préstamo con la fecha actual
+    public void registrarPrestamo(int idEstudiante, int idLibro, String fechaPrestamo) {
+        try (Connection conexion = obtenerConexion()) {
+            String query = "INSERT INTO prestamos (idEstudiante, idLibro, fechaPrestamo) VALUES (?, ?, ?)";
+            try (PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
+                preparedStatement.setInt(1, idEstudiante);
+                preparedStatement.setInt(2, idLibro);
+                preparedStatement.setString(3, fechaPrestamo);
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            // Manejar la excepción o relanzarla según sea necesario
+            e.printStackTrace();
         }
     }
 }
