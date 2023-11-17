@@ -184,32 +184,24 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConnectActionPerformed
 
     private void btnLoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoanActionPerformed
-    // Get the student and book IDs from the text fields
-    try {
+        // Get student and book IDs from the input fields
         int studentId = Integer.parseInt(entryStudent.getText());
         int bookId = Integer.parseInt(entryBook.getText());
 
-        // Open the database connection
-        openDatabase();
-
         // Check if the database is connected
-        if (baseDatos != null && baseDatos.isConnected()) {
+        if (baseDatos.isConnected()) {
             // Get the current date
             String currentDate = baseDatos.getCurrentDate();
 
-            // Register the loan with the current date
+            // Register the loan
             baseDatos.registrarPrestamo(studentId, bookId, currentDate);
 
             // Optionally, show a success message
-            JOptionPane.showMessageDialog(this, "Préstamo registrado exitosamente", "Estado de préstamo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Préstamo registrado exitosamente", "Préstamo", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            // Show an error message if the database is not connected
-            JOptionPane.showMessageDialog(this, "Error de conexión a la base de datos", "Error de conexión", JOptionPane.ERROR_MESSAGE);
+            // Optionally, show an error message
+            JOptionPane.showMessageDialog(this, "Error: Base de datos no conectada", "Error de conexión", JOptionPane.ERROR_MESSAGE);
         }
-    } catch (NumberFormatException e) {
-        // Handle the case where the input is not a valid number
-        JOptionPane.showMessageDialog(this, "Ingrese valores numéricos válidos para el estudiante y el libro", "Error de entrada", JOptionPane.ERROR_MESSAGE);
-    }
     }//GEN-LAST:event_btnLoanActionPerformed
 
     private void entryBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entryBookActionPerformed

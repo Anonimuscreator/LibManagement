@@ -46,7 +46,7 @@ public class BaseDatosBiblioteca {
     // Método para registrar préstamo
     public void registrarPrestamo(Estudiante estudiante, Libro libro) {
         try (Connection conexion = obtenerConexion()) {
-            String query = "INSERT INTO prestamos (id_estudiante, id_libro) VALUES (?, ?)";
+            String query = "INSERT INTO prestamos (idEstudiante, idLibro) VALUES (?, ?)";
             try (PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
                 preparedStatement.setInt(1, estudiante.getId());
                 preparedStatement.setInt(2, libro.getIdLibro());
@@ -61,7 +61,7 @@ public class BaseDatosBiblioteca {
     // Método para registrar devolución
     public void registrarDevolucion(Estudiante estudiante, Libro libro) {
         try (Connection conexion = obtenerConexion()) {
-            String query = "DELETE FROM prestamos WHERE id_estudiante = ? AND id_libro = ?";
+            String query = "DELETE FROM prestamos WHERE idEstudiante = ? AND idLibro = ?";
             try (PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
                 preparedStatement.setInt(1, estudiante.getId());
                 preparedStatement.setInt(2, libro.getIdLibro());
@@ -78,7 +78,7 @@ public class BaseDatosBiblioteca {
         Libro libroInfo = null;
 
         try (Connection conexion = obtenerConexion()) {
-            String query = "SELECT * FROM Libro WHERE id = ?";
+            String query = "SELECT * FROM libros WHERE id = ?";
             try (PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
                 preparedStatement.setInt(1, libroId);
 
@@ -147,24 +147,37 @@ public class BaseDatosBiblioteca {
         }
     }
      public String getCurrentDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Date currentDate = new Date();
         return dateFormat.format(currentDate);
     }
 
     // Método para registrar préstamo con la fecha actual
+// Método para registrar préstamo con la fecha actual
+// Método para registrar préstamo con la fecha actual
     public void registrarPrestamo(int idEstudiante, int idLibro, String fechaPrestamo) {
-        try (Connection conexion = obtenerConexion()) {
+        try {
+            // Obtain the connection
+            Connection conexion = obtenerConexion();
+            if (conexion == null || conexion.isClosed()) {
+                System.out.println("Error: Base de datos no conectada");
+                return;
+            }
+
             String query = "INSERT INTO prestamos (idEstudiante, idLibro, fechaPrestamo) VALUES (?, ?, ?)";
+
+            // Create and execute the PreparedStatement
             try (PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
                 preparedStatement.setInt(1, idEstudiante);
                 preparedStatement.setInt(2, idLibro);
                 preparedStatement.setString(3, fechaPrestamo);
                 preparedStatement.executeUpdate();
+                System.out.println("Préstamo registrado exitosamente");
             }
         } catch (SQLException e) {
-            // Manejar la excepción o relanzarla según sea necesario
+            // Handle the exception or rethrow it as needed
             e.printStackTrace();
         }
     }
+
 }
