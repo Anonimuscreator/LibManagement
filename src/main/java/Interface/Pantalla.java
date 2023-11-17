@@ -15,6 +15,8 @@ public class Pantalla extends javax.swing.JFrame {
     public Pantalla() {
         initComponents();
     }
+    
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -155,6 +157,10 @@ public class Pantalla extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private boolean isNumeric(String str) {
+    return str.matches("\\d+");
+}
+        
     private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
         openDatabase(); // Ensure that the database is connected
 
@@ -184,12 +190,17 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConnectActionPerformed
 
     private void btnLoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoanActionPerformed
-        // Get student and book IDs from the input fields
-        int studentId = Integer.parseInt(entryStudent.getText());
-        int bookId = Integer.parseInt(entryBook.getText());
+    // Get student and book IDs from the input fields
+    int studentId = Integer.parseInt(entryStudent.getText());
+    int bookId = Integer.parseInt(entryBook.getText());
 
-        // Check if the database is connected
-        if (baseDatos.isConnected()) {
+    // Check if the database is connected
+    if (baseDatos.isConnected()) {
+        // Check if the student and book exist in the database
+        boolean studentExists = baseDatos.studentExists(studentId);
+        boolean bookExists = baseDatos.bookExists(bookId);
+
+        if (studentExists && bookExists) {
             // Get the current date
             String currentDate = baseDatos.getCurrentDate();
 
@@ -199,9 +210,13 @@ public class Pantalla extends javax.swing.JFrame {
             // Optionally, show a success message
             JOptionPane.showMessageDialog(this, "Préstamo registrado exitosamente", "Préstamo", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            // Optionally, show an error message
-            JOptionPane.showMessageDialog(this, "Error: Base de datos no conectada", "Error de conexión", JOptionPane.ERROR_MESSAGE);
+            // Show an error message if the student or book doesn't exist
+            JOptionPane.showMessageDialog(this, "Error: Estudiante o libro no encontrado en la base de datos", "Error de préstamo", JOptionPane.ERROR_MESSAGE);
         }
+    } else {
+        // Optionally, show an error message
+        JOptionPane.showMessageDialog(this, "Error: Base de datos no conectada", "Error de conexión", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btnLoanActionPerformed
 
     private void entryBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entryBookActionPerformed

@@ -17,7 +17,7 @@ import Logica.Libro;
 public class BaseDatosBiblioteca {
     private static BaseDatosBiblioteca instancia = null;
     private Connection conexion;
-
+    
     private BaseDatosBiblioteca() {
         try {
             // Cargar el driver JDBC de SQLite
@@ -130,6 +130,7 @@ public class BaseDatosBiblioteca {
             if (conexion != null) {
                 try {
                     conexion.close();
+                    conexion = null;  // Set the connection to null after closing
                     return true;  // Return true if the connection was successfully closed
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -137,6 +138,7 @@ public class BaseDatosBiblioteca {
             }
             return false;  // Return false if there was an issue or if the connection was already closed
         }
+
 
      public ResultSet executeQuery(String query) throws SQLException {
         if (conexion != null && !conexion.isClosed()) {
@@ -179,5 +181,48 @@ public class BaseDatosBiblioteca {
             e.printStackTrace();
         }
     }
+    
+    // Helper method to check if a student with the given ID exists in the database
+    public boolean studentExists(int studentId) {
+        try {
+            // Query the database to check if the student with the given ID exists
+            String query = "SELECT COUNT(*) FROM estudiantes WHERE id = ?";
+            try (PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
+                preparedStatement.setInt(1, studentId);
 
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        int count = resultSet.getInt(1);
+                        return count > 0;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // Helper method to check if a book with the given ID exists in the database
+    public boolean bookExists(int bookId) {
+        try {
+            // Query the database to check if the book with the given ID exists
+            String query = "SELECT COUNT(*) FROM libros WHERE id = ?";
+            try (PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
+                preparedStatement.setInt(1, bookId);
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        int count = resultSet.getInt(1);
+                        return count > 0;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }
