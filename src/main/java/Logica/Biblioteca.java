@@ -1,4 +1,3 @@
-// Clase Biblioteca
 package Logica;
 
 import db.BaseDatosBiblioteca;
@@ -15,7 +14,12 @@ public class Biblioteca {
             estudiante.prestar(libro);
 
             // Delegar la transacción a la clase BaseDatosBiblioteca
-            conexionBaseDatos.registrarPrestamo(estudiante, libro);
+            if (conexionBaseDatos.isConnected()) {
+                conexionBaseDatos.registrarPrestamo(estudiante, libro);
+            } else {
+                System.out.println("Error: Base de datos no conectada.");
+                // Optionally, handle the error or show a message to the user
+            }
         } else {
             System.out.println("El libro no está disponible o no existe.");
         }
@@ -25,6 +29,11 @@ public class Biblioteca {
         estudiante.devolver(libro);
 
         // Delegar la transacción a la clase BaseDatosBiblioteca
-        conexionBaseDatos.registrarDevolucion(estudiante, libro);
+        if (conexionBaseDatos.isConnected()) {
+            conexionBaseDatos.registrarDevolucion(estudiante, libro);
+        } else {
+            System.out.println("Error: Base de datos no conectada.");
+            // Optionally, handle the error or show a message to the user
+        }
     }
 }

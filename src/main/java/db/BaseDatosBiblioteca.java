@@ -16,15 +16,17 @@ import Logica.Libro;
 
 public class BaseDatosBiblioteca {
     private static BaseDatosBiblioteca instancia = null;
-    private Connection conexion;
     
+    private Connection conexion;
+
     private BaseDatosBiblioteca() {
         try {
             // Cargar el driver JDBC de SQLite
             Class.forName("org.sqlite.JDBC");
 
             // Establecer la conexión a tu base de datos SQLite aquí (cambiar la URL según tu caso)
-            conexion = DriverManager.getConnection("jdbc:sqlite:C:/Users/Deplm-08/Desktop/LibManagement/biblioteca.db");
+            conexion = DriverManager.getConnection("jdbc:sqlite:C:/Users/Administrador/Desktop/LibManagement/biblioteca.db");
+            conexion.setAutoCommit(true);
         } catch (ClassNotFoundException | SQLException e) {
             // Manejar la excepción o relanzarla según sea necesario
             e.printStackTrace();
@@ -77,7 +79,12 @@ public class BaseDatosBiblioteca {
     public Libro getInformacionLibro(int libroId) {
         Libro libroInfo = null;
 
-        try (Connection conexion = obtenerConexion()) {
+        try {
+            if (conexion == null) {
+                System.out.println("Error: Base de datos no conectada");
+                return null;
+            }
+
             String query = "SELECT * FROM libros WHERE id = ?";
             try (PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
                 preparedStatement.setInt(1, libroId);
@@ -102,7 +109,12 @@ public class BaseDatosBiblioteca {
     public List<Libro> getLibrosPrestados(Estudiante estudiante) {
         List<Libro> librosPrestados = new ArrayList<>();
 
-        try (Connection conexion = obtenerConexion()) {
+        try {
+            if (conexion == null) {
+                System.out.println("Error: Base de datos no conectada");
+                return librosPrestados;
+            }
+
             String query = "SELECT idLibro FROM prestamos WHERE idEstudiante = ?";
             try (PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
                 preparedStatement.setInt(1, estudiante.getId());
@@ -122,7 +134,7 @@ public class BaseDatosBiblioteca {
         return librosPrestados;
     }
     
-        public boolean isConnected() {
+    public boolean isConnected() {
         return conexion != null;
     }
         
@@ -130,33 +142,30 @@ public class BaseDatosBiblioteca {
             if (conexion != null) {
                 try {
                     conexion.close();
-                    conexion = null;  // Set the connection to null after closing
-                    return true;  // Return true if the connection was successfully closed
+                    conexion = null; // Set the connection to null after closing
+                    return true; // Return true if the connection was successfully closed
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
-            return false;  // Return false if there was an issue or if the connection was already closed
+            return false; // Return false if there was an issue or if the connection was already closed
         }
 
+        
+        public ResultSet executeQuery(String query) throws SQLException {
+           if (conexion != null && !conexion.isClosed()) {
+               Statement statement = conexion.createStatement();
+               return statement.executeQuery(query);
+           } else {
+               throw new SQLException("Connection is closed");
+           }
+       }
+        public String getCurrentDate() {
+           SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+           Date currentDate = new Date();
+           return dateFormat.format(currentDate);
+       }
 
-     public ResultSet executeQuery(String query) throws SQLException {
-        if (conexion != null && !conexion.isClosed()) {
-            Statement statement = conexion.createStatement();
-            return statement.executeQuery(query);
-        } else {
-            throw new SQLException("Connection is closed");
-        }
-    }
-     public String getCurrentDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        Date currentDate = new Date();
-        return dateFormat.format(currentDate);
-    }
-
-    // Método para registrar préstamo con la fecha actual
-// Método para registrar préstamo con la fecha actual
-// Método para registrar préstamo con la fecha actual
     public void registrarPrestamo(int idEstudiante, int idLibro, String fechaPrestamo) {
         try {
             // Obtain the connection
@@ -183,12 +192,12 @@ public class BaseDatosBiblioteca {
     }
     
     // Helper method to check if a student with the given ID exists in the database
-    public boolean studentExists(int studentId) {
+    public boolean studentExists(String studentId) {
         try {
             // Query the database to check if the student with the given ID exists
             String query = "SELECT COUNT(*) FROM estudiantes WHERE id = ?";
             try (PreparedStatement preparedStatement = conexion.prepareStatement(query)) {
-                preparedStatement.setInt(1, studentId);
+                preparedStatement.setString(1, studentId);
 
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     if (resultSet.next()) {

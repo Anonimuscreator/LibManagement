@@ -190,33 +190,39 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConnectActionPerformed
 
     private void btnLoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoanActionPerformed
-    // Get student and book IDs from the input fields
-    int studentId = Integer.parseInt(entryStudent.getText());
-    int bookId = Integer.parseInt(entryBook.getText());
+        // Get student and book IDs from the input fields
+        String studentId = entryStudent.getText();
+        int bookId = Integer.parseInt(entryBook.getText());
 
-    // Check if the database is connected
-    if (baseDatos.isConnected()) {
-        // Check if the student and book exist in the database
-        boolean studentExists = baseDatos.studentExists(studentId);
-        boolean bookExists = baseDatos.bookExists(bookId);
+        // Check if the database is connected
+        if (baseDatos.isConnected()) {
+            System.out.println("Connected to the database");
 
-        if (studentExists && bookExists) {
-            // Get the current date
-            String currentDate = baseDatos.getCurrentDate();
+            // Check if the student and book exist in the database
+            boolean studentExists = baseDatos.studentExists(studentId);
+            boolean bookExists = baseDatos.bookExists(bookId);
 
-            // Register the loan
-            baseDatos.registrarPrestamo(studentId, bookId, currentDate);
+            if (studentExists && bookExists) {
+                System.out.println("Student and book exist in the database");
 
-            // Optionally, show a success message
-            JOptionPane.showMessageDialog(this, "Préstamo registrado exitosamente", "Préstamo", JOptionPane.INFORMATION_MESSAGE);
+                // Get the current date
+                String currentDate = baseDatos.getCurrentDate();
+
+                // Register the loan
+                baseDatos.registrarPrestamo(Integer.parseInt(studentId), bookId, currentDate);
+
+                // Optionally, show a success message
+                JOptionPane.showMessageDialog(this, "Préstamo registrado exitosamente", "Préstamo", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                // Show an error message if the student or book doesn't exist
+                System.out.println("Error: Estudiante o libro no encontrado en la base de datos");
+                JOptionPane.showMessageDialog(this, "Error: Estudiante o libro no encontrado en la base de datos", "Error de préstamo", JOptionPane.ERROR_MESSAGE);
+            }
         } else {
-            // Show an error message if the student or book doesn't exist
-            JOptionPane.showMessageDialog(this, "Error: Estudiante o libro no encontrado en la base de datos", "Error de préstamo", JOptionPane.ERROR_MESSAGE);
+            // Optionally, show an error message
+            System.out.println("Error: Base de datos no conectada");
+            JOptionPane.showMessageDialog(this, "Error: Base de datos no conectada", "Error de conexión", JOptionPane.ERROR_MESSAGE);
         }
-    } else {
-        // Optionally, show an error message
-        JOptionPane.showMessageDialog(this, "Error: Base de datos no conectada", "Error de conexión", JOptionPane.ERROR_MESSAGE);
-    }
     }//GEN-LAST:event_btnLoanActionPerformed
 
     private void entryBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entryBookActionPerformed
@@ -239,19 +245,18 @@ public class Pantalla extends javax.swing.JFrame {
     }
 
     private boolean closeDatabase() {
-       baseDatos = BaseDatosBiblioteca.obtenerInstancia();
-       boolean success = baseDatos.cerrarConexion();
-       if (success) {
-           // Update status label
-           status.setText("Desconectado");
-           // Optionally, show a message dialog to indicate successful database closure
-           JOptionPane.showMessageDialog(this, "Base de datos cerrada exitosamente", "Estado de conexión", JOptionPane.INFORMATION_MESSAGE);
-       } else {
-           // Optionally, show a message dialog to indicate closure error
-           JOptionPane.showMessageDialog(this, "Error al cerrar la base de datos", "Error de conexión", JOptionPane.ERROR_MESSAGE);
-       }
-       return success;
-   }
+        boolean success = baseDatos.cerrarConexion();
+        if (success) {
+            // Update status label
+            status.setText("Desconectado");
+            // Optionally, show a message dialog to indicate successful database closure
+            JOptionPane.showMessageDialog(this, "Base de datos cerrada exitosamente", "Estado de conexión", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            // Optionally, show a message dialog to indicate closure error
+            JOptionPane.showMessageDialog(this, "Error al cerrar la base de datos", "Error de conexión", JOptionPane.ERROR_MESSAGE);
+        }
+        return success;
+    }
 
     private void btnCloseDBActionPerformed(java.awt.event.ActionEvent evt) {
         SwingUtilities.invokeLater(() -> {
